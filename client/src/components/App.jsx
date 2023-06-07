@@ -77,6 +77,13 @@ const handleOutsideClick = (e) => {
   }
 
   // useEffect(() => {
+  //   return axios.get('serverdatabaseurl')
+  //     .then((response) => {
+  //       setData(response.data);
+  //     })
+  // }, [])
+
+  // useEffect(() => {
   //   console.log(buildData);
   // }, [buildData])
 
@@ -111,6 +118,7 @@ const handleOutsideClick = (e) => {
     return (
       <div id="App">
       <SignIn />
+      <h2>Welcome, {name}!</h2>
       <h1 className="app-title">Keyboard Gallery</h1>
       <div className="component-container">
         <CardComponent data={data} index={index} slideLeft={slideLeft} slideRight={slideRight}/>
