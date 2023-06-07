@@ -1,12 +1,20 @@
 import React from 'react';
-// import reactDOM from 'react-dom';
-// (does the same thing as the line below, but doesn't destructure for the function)
 import { createRoot } from 'react-dom/client';
+import { Auth0Provider } from '@auth0/auth0-react';
 
 import App from './components/App';
 
+const auth_domain = process.env.REACT_APP_AUTH0_DOMAIN
+const auth_clientId = process.env.REACT_APP_AUTH0_CLIENT_ID
 
-// ReactDOM.createRoot(document.getElementById)('root')).render(<App />);
-// Above is for the non-destructured way on line 2
-// Below is the way to do it for the method on line 4
-createRoot(document.getElementById('root')).render(<App />);
+createRoot(document.getElementById('root')).render(
+<Auth0Provider
+  domain={auth_domain}
+  clientId={auth_clientId}
+  authorizationParams={{
+    redirect_uri: 'http://localhost:3000'
+  }}
+  >
+    <App />
+  </Auth0Provider>
+);

@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import CardComponent from './CardComponent.jsx';
 import AddForm from './AddForm.jsx';
+import SignIn from './SignIn.jsx';
+import SignOut from './SignOut.jsx';
+
 import axios from 'axios';
 import {Image} from 'cloudinary-react';
 import mockData from '../../../mockData.js';
@@ -19,8 +22,6 @@ const App = () => {
   const slideRight = () => {
     if (index + 1 <= data.length - 1) {
       setIndex(index + 1);
-      console.log('INDEX: ', index);
-      console.log('DATA LENGTH: ', data.length - 1);
     }
   };
 
@@ -38,6 +39,8 @@ const App = () => {
 
   return (
     <div id="App">
+      <SignIn />
+      <SignOut />
       <h1 className="app-title">Keyboard Gallery</h1>
       <div className="component-container">
         <CardComponent data={data} index={index} slideLeft={slideLeft} slideRight={slideRight}/>
