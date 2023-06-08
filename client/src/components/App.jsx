@@ -12,7 +12,6 @@ import mockData from '../../../mockData.js';
 const App = () => {
   const [imageSelected, setImageSelected] = useState([]);
   const [data, setData] = useState(mockData);
-  const [index, setIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [buildData, setBuildData] = useState({response: {
     keyboard: '',
@@ -41,18 +40,6 @@ const handleOutsideClick = (e) => {
   }
 }
 
-  const slideLeft = () => {
-    if (index - 1 >= 0) {
-      setIndex(index - 1);
-    }
-  };
-
-  const slideRight = () => {
-    if (index + 1 <= data.length - 1) {
-      setIndex(index + 1);
-    }
-  };
-
   const uploadImage = () => {
     const formData = new FormData();
     formData.append("file", imageSelected);
@@ -75,6 +62,7 @@ const handleOutsideClick = (e) => {
       .then(() => {
         return axios.get('/keyboardgallery')
           .then((response) => {
+            console.log('Response Data: ', response.data)
             setData(response.data);
           })
           .catch((error) => {
@@ -84,9 +72,19 @@ const handleOutsideClick = (e) => {
   }
 
   //find one and update
-  // const handleLike = () => {
-  //   axios.patch('/keyboardgallery', )
-  // }
+  const handleLike = (id) => {
+    axios.patch(`/keyboardgallery/${id}`, { $inc: { likes: 1 } })
+      .then(() => {
+        setData((data) => {
+          return data.map((keyboard) => {
+            if (keyboard._id === id) {
+              return {...keyboard, likes: keyboard.likes + 1};
+            }
+            return keyboard;
+          })
+        })
+      })
+  }
 
   // useEffect(() => {
   //   return axios.get('serverdatabaseurl')
@@ -110,10 +108,12 @@ const handleOutsideClick = (e) => {
           <h2>Welcome, {name}!</h2>
           <SignOut />
         </div>
-        <h1 className="app-title">Keyboard Gallery</h1>
+        <h1 className="app-title">KeeBeeBuilds</h1>
         <div className="component-container">
-          <CardComponent data={data} index={index} slideLeft={slideLeft} slideRight={slideRight}/>
-          <button id="modalBtn" onClick={openModal}>Add a build!</button>
+          <CardComponent data={data} handleLike={handleLike}/>
+          <div className="modalBtnContainer">
+            <button id="modalBtn" onClick={openModal}>Add a build!</button>
+          </div>
         { modalVisible && (<div id="formModal" className="modal" onClick={handleOutsideClick}>
             <div className="modal-content">
               <span className="close" onClick={closeModal}>&times;</span>
@@ -132,13 +132,13 @@ const handleOutsideClick = (e) => {
   } else {
     return (
       <div id="App">
-        <div clasName="welcome-header">
+        <div className="welcome-header">
           <h2>Welcome, {name}!</h2>
           <SignIn />
         </div>
-      <h1 className="app-title">Keyboard Gallery</h1>
+      <h1 className="app-title">KeeBeeBuilds</h1>
       <div className="component-container">
-        <CardComponent data={data} index={index} slideLeft={slideLeft} slideRight={slideRight}/>
+        <CardComponent data={data} />
       </div>
     </div>
     )

@@ -1,24 +1,15 @@
 import React from 'react';
 import Card from './Card.jsx';
 
-const CardComponent = ({ data, index, slideLeft, slideRight }) => {
+const CardComponent = ({ data, index, handleLike}) => {
 
-return (
-  <div className="carousel">
-          <div>
-        <button className="leftArrow" type="button" onClick={slideLeft}>&#8678;</button>
-      </div>
-      <div className="card-component">
-    {data.map((keyboard, n) => {
-    let position = n > index ? "nextCard"
-    : n === index ? "activeCard" : "prevCard";
-    return <Card key={n} keyboard={keyboard} cardStyle={position}/>})}
-      </div>
-          <div>
-        <button className="rightArrow" type="button" onClick={slideRight}>&#x21e8;</button>
-      </div>
-  </div>
-)
+  return (
+    <div className="card-component">
+      {data.map((keyboard, n) => {
+        return <Card key={n} keyboard={keyboard} handleLike={handleLike} />
+      })}
+    </div>
+  )
 }
 
 export default CardComponent;

@@ -14,13 +14,12 @@ const createBuild = (buildData) => {
   });
 };
 
-// const updateLikes = (buildData) => {
-//   return keyboard.findByIdAndUpdate({
-
-//   })
-// }
+const updateLikes = (id) => {
+  return keyboard.findByIdAndUpdate(id, { $inc: {likes: 1}})
+}
 
 module.exports = {
   createBuild,
-  getBuilds
+  getBuilds,
+  updateLikes
 };

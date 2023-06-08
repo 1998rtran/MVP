@@ -1,6 +1,6 @@
 require('dotenv').config();
 const path = require('path');
-const { createBuild, getBuilds } = require('../database/controllers/controller.js');
+const { createBuild, getBuilds, updateLikes } = require('../database/controllers/controller.js');
 const db = require('../database/index.js');
 const express = require('express');
 const morgan = require('morgan');
@@ -32,6 +32,18 @@ app.post('/keyboardgallery', (req, res) => {
     })
     .catch((error) => {
       console.log('Error sending build data to database: ', error);
+      res.sendStatus(500);
+    })
+})
+
+app.patch(`/keyboardgallery/*`, (req, res) => {
+  console.log(req.params[0]);
+  updateLikes(req.params[0])
+    .then(() => {
+      res.sendStatus(201);
+    })
+    .catch((error) => {
+      console.log('Error updating like count: ', error);
       res.sendStatus(500);
     })
 })
