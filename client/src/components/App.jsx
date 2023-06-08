@@ -23,13 +23,14 @@ const App = () => {
   }})
 
   const { isAuthenticated, isLoading, user } = useAuth0();
-
-  const name = user?.name || 'Guest'
+  const name = user?.nickname || 'Guest'
 
   useEffect(() => {
     return axios.get('/keyboardgallery')
       .then((response) => {
         setData(response.data);
+        console.log('This is the user object: '. test);
+
       })
   }, [])
 
