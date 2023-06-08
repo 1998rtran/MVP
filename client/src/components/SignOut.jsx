@@ -5,9 +5,11 @@ const SignOut = () => {
   const { logout } = useAuth0();
 
   return (
-    <button onClick={() => logout({ logoutParams: { returnTo: 'http://localhost:3000' } })}>
-      Sign Out
-    </button>
+    <div className="signoutcontainer">
+      <button onClick={() => logout({ logoutParams: { returnTo: 'http://localhost:3000' } })}>
+        Sign Out
+      </button>
+    </div>
   );
 };
 

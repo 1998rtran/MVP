@@ -16,7 +16,8 @@ const App = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [buildData, setBuildData] = useState({response: {
     keyboard: '',
-    description: '',
+    switches: '',
+    keycaps: '',
     imageUrl: '',
     creator: '',
     likes: 0
@@ -70,9 +71,9 @@ const handleOutsideClick = (e) => {
     }
 
   const handleSubmit = () => {
-    axios.post('/', buildData.response)
+    axios.post('/keyboardgallery', buildData.response)
       .then(() => {
-        return axios.get('/')
+        return axios.get('/keyboardgallery')
           .then((response) => {
             console.log('This is the response from DB: ', response);
           })
@@ -100,8 +101,10 @@ const handleOutsideClick = (e) => {
   if (isAuthenticated) {
     return (
       <div id="App">
-        <SignOut />
-        <h2>Welcome, {name}!</h2>
+        <div className="welcome-header">
+          <h2>Welcome, {name}!</h2>
+          <SignOut />
+        </div>
         <h1 className="app-title">Keyboard Gallery</h1>
         <div className="component-container">
           <CardComponent data={data} index={index} slideLeft={slideLeft} slideRight={slideRight}/>
@@ -124,8 +127,10 @@ const handleOutsideClick = (e) => {
   } else {
     return (
       <div id="App">
-      <SignIn />
-      <h2>Welcome, {name}!</h2>
+        <div clasName="welcome-header">
+          <h2>Welcome, {name}!</h2>
+          <SignIn />
+        </div>
       <h1 className="app-title">Keyboard Gallery</h1>
       <div className="component-container">
         <CardComponent data={data} index={index} slideLeft={slideLeft} slideRight={slideRight}/>

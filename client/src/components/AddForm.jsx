@@ -6,17 +6,25 @@ const AddForm = ({ setImageSelected, uploadImage, buildData, setBuildData, close
     <div>
       <div>
         <label>Keyboard: </label>
-        <input type="text" placeholder="input keyboard name" onChange={(e)=> {
+        <input type="text" placeholder="input keyboard" onChange={(e)=> {
           setBuildData({ response: {
             ...buildData.response, keyboard: e.target.value
           }})
         }}/>
       </div>
       <div>
-        <label>Description: </label>
-        <textarea type="text" placeholder="input keyboard build details" onChange={(e) => {
+        <label>Switches: </label>
+        <input type="text" placeholder="input switches" onChange={(e) => {
           setBuildData({ response: {
-            ...buildData.response, description: e.target.value
+            ...buildData.response, switches: e.target.value
+          }})
+        }}/>
+      </div>
+      <div>
+        <label>Keycaps: </label>
+        <input type="text" placeholder="input keycaps" onChange={(e) => {
+          setBuildData({ response: {
+            ...buildData.response, keycaps: e.target.value
           }})
         }}/>
       </div>

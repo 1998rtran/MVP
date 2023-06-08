@@ -13,10 +13,9 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-app.get('/', (req, res) => {
+app.get('/keyboardgallery', (req, res) => {
   getBuilds()
     .then((response) => {
-      console.log('This is the HTTP response: ', response);
       res.json(response);
     })
     .catch((error) => {
@@ -25,7 +24,7 @@ app.get('/', (req, res) => {
     })
 })
 
-app.post('/', (req, res) => {
+app.post('/keyboardgallery', (req, res) => {
   console.log('This is the HTTP request: ', req.body);
   createBuild(req.body)
     .then(() => {

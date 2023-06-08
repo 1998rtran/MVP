@@ -7,7 +7,8 @@ const getBuilds = () => {
 const createBuild = (buildData) => {
   return keyboard.create({
     keyboard: buildData.keyboard,
-    description: buildData.description,
+    switches: buildData.switches,
+    keycaps: buildData.keycaps,
     imageUrl: buildData.imageUrl,
     creator: buildData.creator
   });
