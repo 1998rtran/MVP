@@ -26,6 +26,13 @@ const App = () => {
 
   const name = user?.name || 'Guest'
 
+  useEffect(() => {
+    return axios.get('/keyboardgallery')
+      .then((response) => {
+        setData(response.data);
+      })
+  }, [])
+
 const openModal = () => {
   setModalVisible(true);
 }
@@ -87,15 +94,8 @@ const handleOutsideClick = (e) => {
   }
 
   // useEffect(() => {
-  //   return axios.get('serverdatabaseurl')
-  //     .then((response) => {
-  //       setData(response.data);
-  //     })
-  // }, [])
-
-  useEffect(() => {
-    console.log('BUILD DATA: ', buildData);
-  }, [buildData])
+  //   console.log('BUILD DATA: ', buildData);
+  // }, [buildData])
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -105,10 +105,12 @@ const handleOutsideClick = (e) => {
     return (
       <div id="App">
         <div className="welcome-header">
-          <h2>Welcome, {name}!</h2>
+          <h2 className="welcome">Welcome, {name}!</h2>
           <SignOut />
         </div>
-        <h1 className="app-title">KeeBeeBuilds</h1>
+        <div className="app-title">
+          <h1> <img className="icon" src="https://res.cloudinary.com/doryckkpf/image/upload/v1686251971/RaysKeysNavyWhite_yb0esy.png" alt="icon" /> KeeBeeBuilds</h1>
+        </div>
         <div className="component-container">
           <CardComponent data={data} handleLike={handleLike}/>
           <div className="modalBtnContainer">
@@ -133,10 +135,12 @@ const handleOutsideClick = (e) => {
     return (
       <div id="App">
         <div className="welcome-header">
-          <h2>Welcome, {name}!</h2>
+          <h2 className="welcome">Welcome, {name}!</h2>
           <SignIn />
         </div>
-      <h1 className="app-title">KeeBeeBuilds</h1>
+        <div className="app-title">
+          <h1> <img className="icon" src="https://res.cloudinary.com/doryckkpf/image/upload/v1686251971/RaysKeysNavyWhite_yb0esy.png" alt="icon" /> KeeBeeBuilds</h1>
+        </div>
       <div className="component-container">
         <CardComponent data={data} />
       </div>

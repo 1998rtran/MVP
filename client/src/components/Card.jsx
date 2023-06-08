@@ -1,16 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 
 const Card = ({ keyboard, handleLike }) => {
-
+const [showModal, setShowModal] = useState(false);
 const { isAuthenticated } = useAuth0();
+
+const handleImageModal = (e) => {
+  setShowModal(true);
+  // console.log(e.target.src);
+  // let test = document.getElementById('img01');
+  // console.log(test);
+  // document.getElementById('img01').src = e.target.src;
+  // document.getElementById('caption').innerText = e.target.alt;
+}
 
 if (isAuthenticated) {
 return (
   <div className='card-container'>
     <div className="image-container">
-      <img src={keyboard.imageUrl} alt={keyboard.keyboard}/>
+      <img src={keyboard.imageUrl} alt={keyboard.keyboard} />
     </div>
+{/* { showModal ?? <div className="img-modal" className="modal">
+      <span className="close">&times;</span>
+      <img className="img-modal-content" id="img01" />
+      <div id="caption"></div>
+    </div>} */}
     <div className="card-content">
       <div className="card-title">
         <h3>Keyboard: {keyboard.keyboard}</h3>
@@ -31,7 +45,7 @@ return (
     </div>
     <div className="btn">
       <button>
-        <a>
+        <a onClick={handleImageModal}>
           View More
         </a>
       </button>
@@ -63,7 +77,7 @@ return (
       </div>
       <div className="btn">
         <button>
-          <a>
+          <a onClick={handleImageModal}>
             View More
           </a>
         </button>
