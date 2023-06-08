@@ -1,11 +1,11 @@
 import React from 'react';
 
-const AddForm = ({ setImageSelected, uploadImage, buildData, setBuildData, closeModal }) => {
+const AddForm = ({ setImageSelected, uploadImage, buildData, setBuildData, closeModal, handleSubmit }) => {
 
   return (
     <div>
       <div>
-        <label>Keyboard</label>
+        <label>Keyboard: </label>
         <input type="text" placeholder="input keyboard name" onChange={(e)=> {
           setBuildData({ response: {
             ...buildData.response, keyboard: e.target.value
@@ -13,7 +13,7 @@ const AddForm = ({ setImageSelected, uploadImage, buildData, setBuildData, close
         }}/>
       </div>
       <div>
-        <label>Description</label>
+        <label>Description: </label>
         <textarea type="text" placeholder="input keyboard build details" onChange={(e) => {
           setBuildData({ response: {
             ...buildData.response, description: e.target.value
@@ -21,11 +21,11 @@ const AddForm = ({ setImageSelected, uploadImage, buildData, setBuildData, close
         }}/>
       </div>
       <input type="file" onChange={(e) => {setImageSelected(e.target.files[0])}}/>
+      <button onClick={uploadImage}>Confirm Build</button>
       <button onClick={() => {
-        uploadImage();
+        handleSubmit();
         closeModal();
-        alert('Successfully submitted keyboard build!')
-        }}>Submit Build!</button>
+      }}>Submit Build!</button>
     </div>
   )
 }

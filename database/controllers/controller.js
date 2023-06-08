@@ -1,12 +1,16 @@
-const keyboard = require('../models/model.js')
+const keyboard = require('../models/model.js');
+
+const getBuilds = () => {
+  return keyboard.find({}).exec();
+};
 
 const createBuild = (buildData) => {
-  keyboard.create({
+  return keyboard.create({
     keyboard: buildData.keyboard,
     description: buildData.description,
     imageUrl: buildData.imageUrl,
     creator: buildData.creator
-  })
+  });
 };
 
 // const updateLikes = (buildData) => {
@@ -15,4 +19,7 @@ const createBuild = (buildData) => {
 //   })
 // }
 
-module.exports = createBuild;
+module.exports = {
+  createBuild,
+  getBuilds
+};

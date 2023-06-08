@@ -52,7 +52,7 @@ const handleOutsideClick = (e) => {
     }
   };
 
-  const uploadImage = (files) => {
+  const uploadImage = () => {
     const formData = new FormData();
     formData.append("file", imageSelected);
     formData.append("upload_preset", "ebqmycin")
@@ -63,17 +63,23 @@ const handleOutsideClick = (e) => {
           ...buildData.response, imageUrl: response.data.secure_url, creator: name
           }
         })
-        // return axios.post('serverdatabaseurl', buildData);
       })
-      // .then(() => {
-      //   return axios.get('serverdatabaseurl')
-      //     .then((response) => {
-      //       setData(response.data);
-      //     })
-      //     .catch((error) => {
-      //       console.log('Unable to get data: ', error);
-      //     })
-      // })
+      .then(() => {
+        alert('Successfully confirmed keyboard build!');
+      })
+    }
+
+  const handleSubmit = () => {
+    axios.post('/', buildData.response)
+      .then(() => {
+        return axios.get('/')
+          .then((response) => {
+            console.log('This is the response from DB: ', response);
+          })
+          .catch((error) => {
+            console.log('Unable to get data: ', error);
+          })
+      });
   }
 
   // useEffect(() => {
@@ -83,9 +89,9 @@ const handleOutsideClick = (e) => {
   //     })
   // }, [])
 
-  // useEffect(() => {
-  //   console.log(buildData);
-  // }, [buildData])
+  useEffect(() => {
+    console.log('BUILD DATA: ', buildData);
+  }, [buildData])
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -108,7 +114,8 @@ const handleOutsideClick = (e) => {
                 uploadImage={uploadImage}
                 buildData={buildData}
                 setBuildData={setBuildData}
-                closeModal={closeModal}/>
+                closeModal={closeModal}
+                handleSubmit={handleSubmit}/>
             </div>
           </div> )}
         </div>
