@@ -75,13 +75,18 @@ const handleOutsideClick = (e) => {
       .then(() => {
         return axios.get('/keyboardgallery')
           .then((response) => {
-            console.log('This is the response from DB: ', response);
+            setData(response.data);
           })
           .catch((error) => {
             console.log('Unable to get data: ', error);
           })
       });
   }
+
+  //find one and update
+  // const handleLike = () => {
+  //   axios.patch('/keyboardgallery', )
+  // }
 
   // useEffect(() => {
   //   return axios.get('serverdatabaseurl')
@@ -141,6 +146,3 @@ const handleOutsideClick = (e) => {
 }
 
 export default App;
-
-{/* <AddForm setImageSelected={setImageSelected} uploadImage={uploadImage}/> */}
-{/* <Image cloudName="doryckkpf" publicId="https://res.cloudinary.com/doryckkpf/image/upload/v1686077062/nuv53liw1lw8to6vgpuc.jpg" style={{width: 500}}/> */}

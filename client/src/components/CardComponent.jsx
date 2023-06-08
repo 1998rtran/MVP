@@ -22,9 +22,3 @@ return (
 }
 
 export default CardComponent;
-
-// return (
-//   <div className="card-component">
-//     {data.map((keyboard, i) => (<Card key={i} keyboard={keyboard}/>))}
-//   </div>
-// )

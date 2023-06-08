@@ -19,6 +19,7 @@ return (
       </div>
       <div className="likes">
         <p>{keyboard.likes} likes</p>
+        <button className="likebtn" onClick={(e) => {console.log(e)}}>&#9825;</button>
       </div>
       <div className="creator">
         <p>Created by: {keyboard.creator}</p>
