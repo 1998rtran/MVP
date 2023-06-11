@@ -13,6 +13,7 @@ const App = () => {
   const [imageSelected, setImageSelected] = useState([]);
   const [data, setData] = useState([]);
   const [gallery, setGallery] = useState([]);
+  const [confirmation, setConfirmation] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [imgModal, setImgModal] = useState(false);
   const [img, setImg] = useState('');
@@ -77,35 +78,80 @@ const App = () => {
       })
       .then(() => {
         alert('Successfully confirmed keyboard build!');
+        setConfirmation(true);
       })
   }
 
   const handleSubmit = () => {
-    axios.post('/keyboardgallery', buildData.response)
-      .then(() => {
-        return axios.get('/keyboardgallery')
-          .then((response) => {
-            setData(response.data);
-          })
-          .catch((error) => {
-            console.log('Unable to get data: ', error);
-          })
-      });
+    if (confirmation) {
+      axios.post('/keyboardgallery', buildData.response)
+        .then(() => {
+          return axios.get('/keyboardgallery')
+            .then((response) => {
+              setGallery(response.data);
+              setConfirmation(false);
+              setBuildData({
+                response: {
+                  keyboard: '',
+                  switches: '',
+                  keycaps: '',
+                  imageUrl: '',
+                  creator: '',
+                  likes: 0
+                }
+              })
+            })
+            .catch((error) => {
+              console.log('Unable to get data: ', error);
+            })
+        });
+
+    } else {
+      alert('Please confirm your build first!');
+    }
   }
+
+  // const handleLike = (id) => {
+  //   // axios.patch(`/keyboardgallery/${id}`, { $inc: { likes: 1 } })
+  //   //   .then(() => {
+  //   //     setGallery((data) => {
+  //   //       return data.map((keyboard) => {
+  //   //         if (keyboard._id === id) {
+  //   //           return { ...keyboard, likes: keyboard.likes + 1 };
+  //   //         }
+  //   //         return keyboard;
+  //   //       })
+  //   //     })
+  //   //   })
+  //   axios.patch(`/keyboardgallery/${id}`, { $inc: { likes: 1 } })
+  //   .then(() => {
+  //     return axios.get('/keyboardgallery')
+  //     .then((response) => {
+  //       setGallery(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log('Unable to get data: ', error);
+  //     })
+  //   })
+  // }
 
   const handleLike = (id) => {
     axios.patch(`/keyboardgallery/${id}`, { $inc: { likes: 1 } })
       .then(() => {
-        setGallery((data) => {
-          return data.map((keyboard) => {
+        setGallery((prevGallery) => {
+          const updatedGallery = prevGallery.map((keyboard) => {
             if (keyboard._id === id) {
               return { ...keyboard, likes: keyboard.likes + 1 };
             }
             return keyboard;
-          })
-        })
+          });
+          return updatedGallery;
+        });
       })
-  }
+      .catch((error) => {
+        console.log('Unable to update likes: ', error);
+      });
+  };
 
   const handleEdit = (id) => {
     if (editData.response.editKeyboard === '' || editData.response.editSwitches === '' || editData.response.editKeycaps === '') {
@@ -116,7 +162,7 @@ const App = () => {
         .then(() => {
           return axios.get('/keyboardgallery')
             .then((response) => {
-              setData(response.data);
+              setGallery(response.data);
             })
             .catch((error) => {
               console.log('Unable to get data: ', error);
@@ -131,7 +177,7 @@ const App = () => {
         .then(() => {
           return axios.get('/keyboardgallery')
             .then((response) => {
-              setData(response.data);
+              setGallery(response.data);
             })
             .catch((error) => {
               console.log('Unable to get data: ', error);
@@ -150,17 +196,18 @@ const App = () => {
   }
 
   const sortList = (value) => {
-    if (value === 'Most Recent') {
-      const recentData = [...data].reverse();
-      setGallery(recentData);
-    }
-    if (value === 'Most Liked') {
-      const likedData = [...data].sort((a, b) => b.likes - a.likes);
-      setGallery(likedData);
-    }
+    return axios.get('/keyboardgallery')
+      .then((response) => {
+        if (value === 'Most Recent') {
+          const recentData = [...response.data].reverse();
+          setGallery(recentData);
+        }
+        if (value === 'Most Liked') {
+          const likedData = [...response.data].sort((a, b) => b.likes - a.likes);
+          setGallery(likedData);
+        }
+      })
   }
-
-  // const refresh = location.reload();
 
   // useEffect(() => {
   //   console.log('EDIT DATA: ', editData);
@@ -179,10 +226,10 @@ const App = () => {
           <SignOut />
         </div>
         <div className="app-title">
-          <h1> <img className="icon" src="https://res.cloudinary.com/doryckkpf/image/upload/v1686251971/RaysKeysNavyWhite_yb0esy.png" alt="icon" /> KeeBeeBuilds</h1>
+          <h1> <img className="icon" src="https://res.cloudinary.com/doryckkpf/image/upload/v1686251971/RaysKeysNavyWhite_yb0esy.png" alt="icon" />KeeBeeBuilds</h1>
         </div>
         <div className="sortingFeature">
-          <select defaultValue="Sort By" onChange={(e) => {sortList(e.target.value)}}>
+          <select defaultValue="Sort By" onChange={(e) => { sortList(e.target.value) }}>
             <option value="Sort By" disabled>Sort By</option>
             <option value="Most Recent">Most Recent</option>
             <option value="Most Liked">Most Liked</option>
@@ -190,20 +237,23 @@ const App = () => {
         </div>
         <div className="component-container">
           <CardComponent
-          gallery={gallery}
-          handleLike={handleLike}
-          handleImageModal={handleImageModal}
-          handleDelete={handleDelete}
-          handleEdit={handleEdit}
-          editData={editData}
-          setEditData={setEditData}
-        />
+            gallery={gallery}
+            handleLike={handleLike}
+            handleImageModal={handleImageModal}
+            handleDelete={handleDelete}
+            handleEdit={handleEdit}
+            editData={editData}
+            setEditData={setEditData}
+          />
           <div className="modalBtnContainer">
             <button id="modalBtn" onClick={openModal}>Add a build!</button>
           </div>
           {modalVisible && (<div id="formModal" className="modal" onClick={handleOutsideClick}>
             <div className="modal-content">
-              <span className="close" onClick={closeModal}>&times;</span>
+              <div className="modal-header">
+                <span className="close" onClick={closeModal}>&times;</span>
+                <h3>Add your Build!</h3>
+              </div>
               <AddForm
                 setImageSelected={setImageSelected}
                 uploadImage={uploadImage}
@@ -216,7 +266,7 @@ const App = () => {
         </div>
         {imgModal && (<div id="imageModal" className="modal" onClick={handleOutsideClick}>
           <span className="close" onClick={closeModal}>&times;</span>
-          <img className="image-modal-content" id="img01" src={img}/>
+          <img className="image-modal-content" id="img01" src={img} />
           <div id="caption">{imgAlt}</div>
         </div>)}
       </div>
@@ -229,14 +279,21 @@ const App = () => {
           <SignIn />
         </div>
         <div className="app-title">
+          <div className="sortingFeature">
+            <select defaultValue="Sort By" onChange={(e) => { sortList(e.target.value) }}>
+              <option value="Sort By" disabled>Sort By</option>
+              <option value="Most Recent">Most Recent</option>
+              <option value="Most Liked">Most Liked</option>
+            </select>
+          </div>
           <h1> <img className="icon" src="https://res.cloudinary.com/doryckkpf/image/upload/v1686251971/RaysKeysNavyWhite_yb0esy.png" alt="icon" /> KeeBeeBuilds</h1>
         </div>
         <div className="component-container">
-          <CardComponent data={data} handleImageModal={handleImageModal}/>
+          <CardComponent gallery={gallery} handleImageModal={handleImageModal} />
         </div>
         {imgModal && (<div id="imageModal" className="modal" onClick={handleOutsideClick}>
           <span className="close" onClick={closeModal}>&times;</span>
-          <img className="image-modal-content" id="img01" src={img}/>
+          <img className="image-modal-content" id="img01" src={img} />
           <div id="caption">{imgAlt}</div>
         </div>)}
       </div>

@@ -28,4 +28,4 @@ const GuestCardView = ({ keyboard, handleImageModal }) => {
 }
 
 export default GuestCardView
-;
+  ;
