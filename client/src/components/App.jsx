@@ -11,7 +11,8 @@ import mockData from '../../../mockData.js';
 
 const App = () => {
   const [imageSelected, setImageSelected] = useState([]);
-  const [data, setData] = useState(mockData);
+  const [data, setData] = useState([]);
+  const [gallery, setGallery] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [imgModal, setImgModal] = useState(false);
   const [img, setImg] = useState('');
@@ -42,6 +43,7 @@ const App = () => {
     axios.get('/keyboardgallery')
       .then((response) => {
         setData(response.data);
+        setGallery(response.data);
       })
   }, [])
 
@@ -83,7 +85,6 @@ const App = () => {
       .then(() => {
         return axios.get('/keyboardgallery')
           .then((response) => {
-            console.log('Response Data: ', response.data)
             setData(response.data);
           })
           .catch((error) => {
@@ -95,7 +96,7 @@ const App = () => {
   const handleLike = (id) => {
     axios.patch(`/keyboardgallery/${id}`, { $inc: { likes: 1 } })
       .then(() => {
-        setData((data) => {
+        setGallery((data) => {
           return data.map((keyboard) => {
             if (keyboard._id === id) {
               return { ...keyboard, likes: keyboard.likes + 1 };
@@ -148,6 +149,19 @@ const App = () => {
     setImgAlt(e.target.alt);
   }
 
+  const sortList = (value) => {
+    if (value === 'Most Recent') {
+      const recentData = [...data].reverse();
+      setGallery(recentData);
+    }
+    if (value === 'Most Liked') {
+      const likedData = [...data].sort((a, b) => b.likes - a.likes);
+      setGallery(likedData);
+    }
+  }
+
+  // const refresh = location.reload();
+
   // useEffect(() => {
   //   console.log('EDIT DATA: ', editData);
   //   console.log('BUILD DATA: ', buildData);
@@ -160,16 +174,23 @@ const App = () => {
   if (isAuthenticated) {
     return (
       <div id="App">
-        <div className="welcome-header">
+        <div className="welcome-header" >
           <h2 className="welcome">Welcome, {name}!</h2>
           <SignOut />
         </div>
         <div className="app-title">
           <h1> <img className="icon" src="https://res.cloudinary.com/doryckkpf/image/upload/v1686251971/RaysKeysNavyWhite_yb0esy.png" alt="icon" /> KeeBeeBuilds</h1>
         </div>
+        <div className="sortingFeature">
+          <select defaultValue="Sort By" onChange={(e) => {sortList(e.target.value)}}>
+            <option value="Sort By" disabled>Sort By</option>
+            <option value="Most Recent">Most Recent</option>
+            <option value="Most Liked">Most Liked</option>
+          </select>
+        </div>
         <div className="component-container">
           <CardComponent
-          data={data}
+          gallery={gallery}
           handleLike={handleLike}
           handleImageModal={handleImageModal}
           handleDelete={handleDelete}

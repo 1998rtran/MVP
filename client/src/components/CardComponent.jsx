@@ -1,11 +1,11 @@
 import React from 'react';
 import Card from './Card.jsx';
 
-const CardComponent = ({ data, index, handleLike, handleImageModal, handleDelete, handleEdit, editData, setEditData }) => {
+const CardComponent = ({ gallery, index, handleLike, handleImageModal, handleDelete, handleEdit, editData, setEditData }) => {
 
   return (
     <div className="card-component">
-      {data.map((keyboard, n) => {
+      {gallery.map((keyboard, n) => {
         return <Card
         key={n}
         keyboard={keyboard}

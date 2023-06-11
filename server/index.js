@@ -25,7 +25,6 @@ app.get('/keyboardgallery', (req, res) => {
 })
 
 app.post('/keyboardgallery', (req, res) => {
-  console.log('This is the HTTP request: ', req.body);
   createBuild(req.body)
     .then(() => {
       res.sendStatus(201);
@@ -48,7 +47,6 @@ app.patch(`/keyboardgallery/*`, (req, res) => {
 })
 
 app.put('/keyboardgallery/*', (req, res) => {
-  console.log(req.body);
   editKeyboard(req.params[0], req.body.response)
     .then(() => {
       res.sendStatus(202);
@@ -60,7 +58,6 @@ app.put('/keyboardgallery/*', (req, res) => {
 })
 
 app.delete('/keyboardgallery/*', (req, res) => {
-  console.log(req.params[0]);
   deleteKeyboard(req.params[0])
     .then(() => {
       res.sendStatus(202);

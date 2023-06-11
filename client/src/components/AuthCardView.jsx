@@ -23,8 +23,7 @@ if (!edit) {
           <p>Keycaps: {keyboard.keycaps}</p>
         </div>
         <div className="likes">
-          <p>{keyboard.likes} likes</p>
-          <button className="likebtn" onClick={(e) => {handleLike(keyboard._id)}}>&#9825;</button>
+          <p>{keyboard.likes} <a className="likebtn" onClick={(e) => {handleLike(keyboard._id)}}>likes</a></p>
         </div>
         <div className="creator">
           <p>Created by: {keyboard.creator}</p>
