@@ -125,7 +125,7 @@ const App = () => {
   }
 
   const handleDelete = (id, creator) => {
-    if (user.nickname === creator) {
+    if (user.nickname === creator || '1998rtran' || 'raymondtran14') {
       axios.delete(`/keyboardgallery/${id}`)
         .then(() => {
           return axios.get('/keyboardgallery')
