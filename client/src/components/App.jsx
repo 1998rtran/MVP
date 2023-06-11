@@ -16,6 +16,13 @@ const App = () => {
   const [imgModal, setImgModal] = useState(false);
   const [img, setImg] = useState('');
   const [imgAlt, setImgAlt] = useState('');
+  const [editData, setEditData] = useState({
+    response: {
+      editKeyboard: '',
+      editSwitches: '',
+      editKeycaps: ''
+    }
+  })
   const [buildData, setBuildData] = useState({
     response: {
       keyboard: '',
@@ -85,7 +92,6 @@ const App = () => {
       });
   }
 
-  //find one and update
   const handleLike = (id) => {
     axios.patch(`/keyboardgallery/${id}`, { $inc: { likes: 1 } })
       .then(() => {
@@ -100,19 +106,52 @@ const App = () => {
       })
   }
 
+  const handleEdit = (id) => {
+    if (editData.response.editKeyboard === '' || editData.response.editSwitches === '' || editData.response.editKeycaps === '') {
+      alert('Please fill out all sections');
+      return;
+    } else {
+      axios.put(`/keyboardgallery/${id}`, editData)
+        .then(() => {
+          return axios.get('/keyboardgallery')
+            .then((response) => {
+              setData(response.data);
+            })
+            .catch((error) => {
+              console.log('Unable to get data: ', error);
+            })
+        })
+    }
+  }
+
+  const handleDelete = (id, creator) => {
+    if (user.nickname === creator) {
+      axios.delete(`/keyboardgallery/${id}`)
+        .then(() => {
+          return axios.get('/keyboardgallery')
+            .then((response) => {
+              setData(response.data);
+            })
+            .catch((error) => {
+              console.log('Unable to get data: ', error);
+            })
+        })
+    } else {
+      alert("Cannot delete somebody else's build");
+      return;
+    }
+  }
+
   const handleImageModal = (e) => {
     setImgModal(true);
     setImg(e.target.src);
     setImgAlt(e.target.alt);
-    // let test = document.getElementById('img01');
-    // console.log(test);
-    // document.getElementById('img01').src = e.target.src;
-    // document.getElementById('caption').innerText = e.target.alt;
   }
 
   // useEffect(() => {
+  //   console.log('EDIT DATA: ', editData);
   //   console.log('BUILD DATA: ', buildData);
-  // }, [buildData])
+  // }, [editData, buildData])
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -129,7 +168,15 @@ const App = () => {
           <h1> <img className="icon" src="https://res.cloudinary.com/doryckkpf/image/upload/v1686251971/RaysKeysNavyWhite_yb0esy.png" alt="icon" /> KeeBeeBuilds</h1>
         </div>
         <div className="component-container">
-          <CardComponent data={data} handleLike={handleLike} handleImageModal={handleImageModal}/>
+          <CardComponent
+          data={data}
+          handleLike={handleLike}
+          handleImageModal={handleImageModal}
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+          editData={editData}
+          setEditData={setEditData}
+        />
           <div className="modalBtnContainer">
             <button id="modalBtn" onClick={openModal}>Add a build!</button>
           </div>
@@ -146,6 +193,11 @@ const App = () => {
             </div>
           </div>)}
         </div>
+        {imgModal && (<div id="imageModal" className="modal" onClick={handleOutsideClick}>
+          <span className="close" onClick={closeModal}>&times;</span>
+          <img className="image-modal-content" id="img01" src={img}/>
+          <div id="caption">{imgAlt}</div>
+        </div>)}
       </div>
     );
   } else {
@@ -172,9 +224,3 @@ const App = () => {
 }
 
 export default App;
-
-// {imgModal ?? <div className="modal" onClick={handleOutsideClick}>
-// <span className="close" onClick={closeModal}>&times;</span>
-// <img className="img-modal-content" id="img01" />
-// <div id="caption"></div>
-// </div>}

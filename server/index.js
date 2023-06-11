@@ -1,6 +1,6 @@
 require('dotenv').config();
 const path = require('path');
-const { createBuild, getBuilds, updateLikes } = require('../database/controllers/controller.js');
+const { createBuild, getBuilds, updateLikes, editKeyboard, deleteKeyboard } = require('../database/controllers/controller.js');
 const db = require('../database/index.js');
 const express = require('express');
 const morgan = require('morgan');
@@ -37,13 +37,36 @@ app.post('/keyboardgallery', (req, res) => {
 })
 
 app.patch(`/keyboardgallery/*`, (req, res) => {
-  console.log(req.params[0]);
   updateLikes(req.params[0])
     .then(() => {
-      res.sendStatus(201);
+      res.sendStatus(202);
     })
     .catch((error) => {
       console.log('Error updating like count: ', error);
+      res.sendStatus(500);
+    })
+})
+
+app.put('/keyboardgallery/*', (req, res) => {
+  console.log(req.body);
+  editKeyboard(req.params[0], req.body.response)
+    .then(() => {
+      res.sendStatus(202);
+    })
+    .catch((error) => {
+      console.log('Unable to update keyboard: ', error);
+      res.sendStatus(500);
+    })
+})
+
+app.delete('/keyboardgallery/*', (req, res) => {
+  console.log(req.params[0]);
+  deleteKeyboard(req.params[0])
+    .then(() => {
+      res.sendStatus(202);
+    })
+    .catch((error) => {
+      console.log('Unable to delete keyboard: ', error);
       res.sendStatus(500);
     })
 })

@@ -1,67 +1,41 @@
 import React, { useState } from 'react';
+import AuthCardView from './AuthCardView.jsx';
+import GuestCardView from './GuestCardView';
+import axios from 'axios';
 import { useAuth0 } from "@auth0/auth0-react";
 
-const Card = ({ keyboard, handleLike, handleImageModal }) => {
-const { isAuthenticated, user } = useAuth0();
+const Card = ({ keyboard, handleLike, handleImageModal, handleDelete, handleEdit, editData, setEditData}) => {
+  const [edit, setEdit] = useState(false);
+  const { isAuthenticated, user } = useAuth0();
 
-if (isAuthenticated) {
-return (
-  <div className='card-container'>
-    <div className="image-container">
-      <img src={keyboard.imageUrl} alt={keyboard.keyboard} />
-    </div>
-    <div className="card-content">
-      <div className="card-title">
-        <h3>Keyboard: {keyboard.keyboard}</h3>
-      </div>
-      <div className="card-switches">
-        <p>Switches: {keyboard.switches}</p>
-      </div>
-      <div className="card-keycaps">
-        <p>Keycaps: {keyboard.keycaps}</p>
-      </div>
-      <div className="likes">
-        <p>{keyboard.likes} likes</p>
-        <button className="likebtn" onClick={(e) => {handleLike(keyboard._id)}}>&#9825;</button>
-      </div>
-      <div className="creator">
-        <p>Created by: {keyboard.creator}</p>
-      </div>
-    </div>
-    <div className="btn">
-      <button onClick={handleImageModal}><a>View More</a></button>
-    </div>
-  </div>
-)
-} else {
-  return (
-    <div className='card-container'>
-      <div className="image-container">
-        <img src={keyboard.imageUrl} alt={keyboard.keyboard} onClick={handleImageModal}/>
-      </div>
-      <div className="card-content">
-        <div className="card-title">
-          <h3>Keyboard: {keyboard.keyboard}</h3>
-        </div>
-        <div className="card-switches">
-          <p>Switches: {keyboard.switches}</p>
-        </div>
-        <div className="card-keycaps">
-          <p>Keycaps: {keyboard.keycaps}</p>
-        </div>
-        <div className="likes">
-          <p>{keyboard.likes} likes</p>
-        </div>
-        <div className="creator">
-          <p>Created by: {keyboard.creator}</p>
-        </div>
-      </div>
-      <div className="btn">
-      <button onClick={handleImageModal}><a>View More</a></button>
-    </div>
-    </div>
-  )
-}
+  const editCard = (creator) => {
+    if (user.nickname === creator) {
+      setEdit(!edit);
+    } else {
+      alert("Cannot edit somebody else's build");
+      return;
+    }
+  }
+
+  if (isAuthenticated) {
+    return (
+      <AuthCardView
+        keyboard={keyboard}
+        handleLike={handleLike}
+        handleImageModal={handleImageModal}
+        handleDelete={handleDelete}
+        edit={edit}
+        setEdit={setEdit}
+        editCard={editCard}
+        handleEdit={handleEdit}
+        editData={editData}
+        setEditData={setEditData} />
+    )
+  } else {
+    return (
+      <GuestCardView keyboard={keyboard} handleImageModal={handleImageModal}/>
+    )
+  }
 }
 
 export default Card;
