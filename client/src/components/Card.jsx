@@ -4,7 +4,7 @@ import GuestCardView from './GuestCardView';
 import axios from 'axios';
 import { useAuth0 } from "@auth0/auth0-react";
 
-const Card = ({ keyboard, handleLike, handleImageModal, handleDelete, handleEdit, editData, setEditData }) => {
+const Card = ({ keyboard, handleLike, handleImageModal, handleDelete, handleEdit, editData, setEditData, handleOutsideClick }) => {
   const [edit, setEdit] = useState(false);
   const { isAuthenticated, user } = useAuth0();
 
@@ -24,12 +24,13 @@ const Card = ({ keyboard, handleLike, handleImageModal, handleDelete, handleEdit
         handleLike={handleLike}
         handleImageModal={handleImageModal}
         handleDelete={handleDelete}
+        handleOutsideClick={handleOutsideClick}
         edit={edit}
         setEdit={setEdit}
         editCard={editCard}
         handleEdit={handleEdit}
         editData={editData}
-        setEditData={setEditData} />
+        setEditData={setEditData}/>
     )
   } else {
     return (

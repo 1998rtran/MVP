@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect }from 'react';
+import DeleteModal from './Modals/DeleteModal.jsx';
 
-const AuthCardView = ({ keyboard, handleLike, handleImageModal, handleDelete, handleEdit, editCard, edit, setEdit, editData, setEditData }) => {
+const AuthCardView = ({ keyboard, handleLike, handleImageModal, handleDelete, handleEdit, editCard, edit, setEdit, editData, setEditData, handleOutsideClick }) => {
+const [deleteDetails, setDeleteDetails] = useState({id: '', creator: ''})
+const [deleteModal, setDeleteModal] = useState(false);
 
-  // const editCard = () => {
-  //   setEdit(!edit);
-  // }
+const closeDeletePop = () => {
+  setDeleteModal(false);
+}
+
+const deletePop = (id, creator) => {
+  setDeleteDetails({details: {
+    ...deleteDetails.details, id: id, creator: creator
+  }})
+  setDeleteModal(true);
+}
 
   if (!edit) {
     return (
@@ -26,9 +36,10 @@ const AuthCardView = ({ keyboard, handleLike, handleImageModal, handleDelete, ha
             <p>{keyboard.likes} <a className="likebtn" onClick={(e) => { handleLike(keyboard._id) }}>likes</a></p>
           </div>
           <div className="creator">
-            <p>Created by: {keyboard.creator}</p>
+            <p>Submitted by: {keyboard.creator}</p>
           </div>
         </div>
+        {deleteModal && (<DeleteModal closeDeletePop={closeDeletePop} handleOutsideClick={handleOutsideClick} handleDelete={handleDelete} deleteDetails={deleteDetails}/>)}
         <div className="btn">
           <button onClick={() => {
             editCard(keyboard.creator);
@@ -42,7 +53,7 @@ const AuthCardView = ({ keyboard, handleLike, handleImageModal, handleDelete, ha
               }
             });
           }}><a>Edit</a></button>
-          <button onClick={(e) => { handleDelete(keyboard._id, keyboard.creator) }}><a>Delete</a></button>
+          <button onClick={(e) => { deletePop(keyboard._id, keyboard.creator) }}><a>Delete</a></button>
         </div>
       </div>
     )

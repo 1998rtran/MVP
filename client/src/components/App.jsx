@@ -3,6 +3,8 @@ import CardComponent from './CardComponent.jsx';
 import AddForm from './AddForm.jsx';
 import SignIn from './SignIn.jsx';
 import SignOut from './SignOut.jsx';
+import ImageModal from './Modals/ImageModal.jsx';
+import SubmitModal from './Modals/SubmitModal.jsx';
 
 import axios from 'axios';
 import { Image } from 'cloudinary-react';
@@ -58,7 +60,7 @@ const App = () => {
   }
 
   const handleOutsideClick = (e) => {
-    if (e.target === document.getElementById('formModal') || (e.target === document.getElementById('imageModal'))) {
+    if (e.target === document.getElementById('formModal') || (e.target === document.getElementById('imageModal')) || (e.target === document.getElementById('deleteModal'))) {
       closeModal();
     }
   }
@@ -105,35 +107,12 @@ const App = () => {
               console.log('Unable to get data: ', error);
             })
         });
-
+        closeModal();
     } else {
       alert('Please confirm your build first!');
+      return;
     }
   }
-
-  // const handleLike = (id) => {
-  //   // axios.patch(`/keyboardgallery/${id}`, { $inc: { likes: 1 } })
-  //   //   .then(() => {
-  //   //     setGallery((data) => {
-  //   //       return data.map((keyboard) => {
-  //   //         if (keyboard._id === id) {
-  //   //           return { ...keyboard, likes: keyboard.likes + 1 };
-  //   //         }
-  //   //         return keyboard;
-  //   //       })
-  //   //     })
-  //   //   })
-  //   axios.patch(`/keyboardgallery/${id}`, { $inc: { likes: 1 } })
-  //   .then(() => {
-  //     return axios.get('/keyboardgallery')
-  //     .then((response) => {
-  //       setGallery(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log('Unable to get data: ', error);
-  //     })
-  //   })
-  // }
 
   const handleLike = (id) => {
     axios.patch(`/keyboardgallery/${id}`, { $inc: { likes: 1 } })
@@ -241,6 +220,7 @@ const App = () => {
             handleLike={handleLike}
             handleImageModal={handleImageModal}
             handleDelete={handleDelete}
+            handleOutsideClick={handleOutsideClick}
             handleEdit={handleEdit}
             editData={editData}
             setEditData={setEditData}
@@ -248,27 +228,16 @@ const App = () => {
           <div className="modalBtnContainer">
             <button id="modalBtn" onClick={openModal}>Add a build!</button>
           </div>
-          {modalVisible && (<div id="formModal" className="modal" onClick={handleOutsideClick}>
-            <div className="modal-content">
-              <div className="modal-header">
-                <span className="close" onClick={closeModal}>&times;</span>
-                <h3>Add your Build!</h3>
-              </div>
-              <AddForm
-                setImageSelected={setImageSelected}
-                uploadImage={uploadImage}
-                buildData={buildData}
-                setBuildData={setBuildData}
-                closeModal={closeModal}
-                handleSubmit={handleSubmit} />
-            </div>
-          </div>)}
+          {modalVisible && (<SubmitModal
+            handleOutsideClick={handleOutsideClick}
+            setImageSelected={setImageSelected}
+            uploadImage={uploadImage}
+            buildData={buildData}
+            setBuildData={setBuildData}
+            closeModal={closeModal}
+            handleSubmit={handleSubmit} />)}
         </div>
-        {imgModal && (<div id="imageModal" className="modal" onClick={handleOutsideClick}>
-          <span className="close" onClick={closeModal}>&times;</span>
-          <img className="image-modal-content" id="img01" src={img} />
-          <div id="caption">{imgAlt}</div>
-        </div>)}
+        {imgModal && (<ImageModal img={img} imgAlt={imgAlt} closeModal={closeModal} handleOutsideClick={handleOutsideClick} />)}
       </div>
     );
   } else {
@@ -291,11 +260,7 @@ const App = () => {
         <div className="component-container">
           <CardComponent gallery={gallery} handleImageModal={handleImageModal} />
         </div>
-        {imgModal && (<div id="imageModal" className="modal" onClick={handleOutsideClick}>
-          <span className="close" onClick={closeModal}>&times;</span>
-          <img className="image-modal-content" id="img01" src={img} />
-          <div id="caption">{imgAlt}</div>
-        </div>)}
+        {imgModal && (<ImageModal img={img} imgAlt={imgAlt} closeModal={closeModal} handleOutsideClick={handleOutsideClick} />)}
       </div>
     )
   }

@@ -20,12 +20,11 @@ const GuestCardView = ({ keyboard, handleImageModal }) => {
           <p>{keyboard.likes} likes</p>
         </div>
         <div className="creator">
-          <p>Created by: {keyboard.creator}</p>
+          <p>Submitted by: {keyboard.creator}</p>
         </div>
       </div>
     </div>
   )
 }
 
-export default GuestCardView
-  ;
+export default GuestCardView;

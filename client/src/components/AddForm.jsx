@@ -39,7 +39,6 @@ const AddForm = ({ setImageSelected, uploadImage, buildData, setBuildData, close
         <button onClick={uploadImage}>Confirm Build</button>
         <button onClick={() => {
           handleSubmit();
-          closeModal();
         }}>Submit Build!</button>
       </div>
     </div>

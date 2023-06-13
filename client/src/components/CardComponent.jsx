@@ -1,7 +1,7 @@
 import React from 'react';
 import Card from './Card.jsx';
 
-const CardComponent = ({ gallery, index, handleLike, handleImageModal, handleDelete, handleEdit, editData, setEditData }) => {
+const CardComponent = ({ gallery, index, handleLike, handleImageModal, handleDelete, handleEdit, editData, setEditData, handleOutsideClick }) => {
 
   return (
     <div className="card-component">
@@ -12,9 +12,10 @@ const CardComponent = ({ gallery, index, handleLike, handleImageModal, handleDel
           handleLike={handleLike}
           handleImageModal={handleImageModal}
           handleDelete={handleDelete}
+          handleOutsideClick={handleOutsideClick}
           handleEdit={handleEdit}
           editData={editData}
-          setEditData={setEditData} />
+          setEditData={setEditData}/>
       })}
     </div>
   )
